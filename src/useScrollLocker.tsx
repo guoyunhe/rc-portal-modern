@@ -1,7 +1,7 @@
+import { removeCSS, updateCSS } from 'rc-util-modern/dist/Dom/dynamicCSS';
+import { getTargetScrollBarSize } from 'rc-util-modern/dist/getScrollBarSize';
+import useLayoutEffect from 'rc-util-modern/dist/hooks/useLayoutEffect';
 import * as React from 'react';
-import { updateCSS, removeCSS } from 'rc-util/lib/Dom/dynamicCSS';
-import useLayoutEffect from 'rc-util/lib/hooks/useLayoutEffect';
-import { getTargetScrollBarSize } from 'rc-util/lib/getScrollBarSize';
 import { isBodyOverflowing } from './util';
 
 const UNIQUE_ID = `rc-util-locker-${Date.now()}`;
@@ -26,7 +26,7 @@ html body {
   overflow-y: hidden;
   ${isOverflow ? `width: calc(100% - ${scrollbarSize}px);` : ''}
 }`,
-        id,
+        id
       );
     } else {
       removeCSS(id);

@@ -1,20 +1,16 @@
+import canUseDom from 'rc-util-modern/dist/Dom/canUseDom';
+import { supportRef, useComposeRef } from 'rc-util-modern/dist/ref';
+import warning from 'rc-util-modern/dist/warning';
 import * as React from 'react';
 import { createPortal } from 'react-dom';
-import canUseDom from 'rc-util/lib/Dom/canUseDom';
-import warning from 'rc-util/lib/warning';
-import { supportRef, useComposeRef } from 'rc-util/lib/ref';
 import OrderContext from './Context';
+import { inlineMock } from './mock';
 import useDom from './useDom';
 import useScrollLocker from './useScrollLocker';
-import { inlineMock } from './mock';
 
 export type ContainerType = Element | DocumentFragment;
 
-export type GetContainer =
-  | string
-  | ContainerType
-  | (() => ContainerType)
-  | false;
+export type GetContainer = string | ContainerType | (() => ContainerType) | false;
 
 export interface PortalProps {
   /** Customize container element. Default will create a div in document.body when `open` */
@@ -50,14 +46,7 @@ const getPortalContainer = (getContainer: GetContainer) => {
 };
 
 const Portal = React.forwardRef<any, PortalProps>((props, ref) => {
-  const {
-    open,
-    autoLock,
-    getContainer,
-    debug,
-    autoDestroy = true,
-    children,
-  } = props;
+  const { open, autoLock, getContainer, debug, autoDestroy = true, children } = props;
 
   const [shouldRender, setShouldRender] = React.useState(open);
 
@@ -67,7 +56,7 @@ const Portal = React.forwardRef<any, PortalProps>((props, ref) => {
   if (process.env.NODE_ENV !== 'production') {
     warning(
       canUseDom() || !open,
-      `Portal only work in client side. Please call 'useEffect' to show Portal instead default render in SSR.`,
+      `Portal only work in client side. Please call 'useEffect' to show Portal instead default render in SSR.`
     );
   }
 
@@ -79,9 +68,9 @@ const Portal = React.forwardRef<any, PortalProps>((props, ref) => {
   }, [open, autoDestroy]);
 
   // ======================== Container ========================
-  const [innerContainer, setInnerContainer] = React.useState<
-    ContainerType | false
-  >(() => getPortalContainer(getContainer));
+  const [innerContainer, setInnerContainer] = React.useState<ContainerType | false>(() =>
+    getPortalContainer(getContainer)
+  );
 
   React.useEffect(() => {
     const customizeContainer = getPortalContainer(getContainer);
@@ -90,10 +79,7 @@ const Portal = React.forwardRef<any, PortalProps>((props, ref) => {
     setInnerContainer(customizeContainer ?? null);
   });
 
-  const [defaultContainer, queueCreate] = useDom(
-    mergedRender && !innerContainer,
-    debug,
-  );
+  const [defaultContainer, queueCreate] = useDom(mergedRender && !innerContainer, debug);
   const mergedContainer = innerContainer ?? defaultContainer;
 
   // ========================= Locker ==========================
@@ -101,8 +87,7 @@ const Portal = React.forwardRef<any, PortalProps>((props, ref) => {
     autoLock &&
       open &&
       canUseDom() &&
-      (mergedContainer === defaultContainer ||
-        mergedContainer === document.body),
+      (mergedContainer === defaultContainer || mergedContainer === document.body)
   );
 
   // =========================== Ref ===========================
@@ -133,9 +118,7 @@ const Portal = React.forwardRef<any, PortalProps>((props, ref) => {
 
   return (
     <OrderContext.Provider value={queueCreate}>
-      {renderInline
-        ? reffedChildren
-        : createPortal(reffedChildren, mergedContainer)}
+      {renderInline ? reffedChildren : createPortal(reffedChildren, mergedContainer)}
     </OrderContext.Provider>
   );
 });

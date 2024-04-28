@@ -1,5 +1,5 @@
-import React from 'react';
 import { render } from '@testing-library/react';
+import React from 'react';
 import Portal from '../src';
 
 global.isOverflow = true;
@@ -13,7 +13,7 @@ jest.mock('../src/util', () => {
 });
 
 // Revert `useLayoutEffect` back to real one since we should keep order for test
-jest.mock('rc-util/lib/hooks/useLayoutEffect', () => {
+jest.mock('rc-util-modern/dist/hooks/useLayoutEffect', () => {
   const origin = jest.requireActual('react');
   return origin.useLayoutEffect;
 });
@@ -33,16 +33,12 @@ describe('Portal', () => {
             <p>Children</p>
           </Portal>
         </Portal>
-      </Portal>,
+      </Portal>
     );
 
     const pList = Array.from(document.body.querySelectorAll('p'));
     expect(pList).toHaveLength(3);
-    expect(pList.map(p => p.textContent)).toEqual([
-      'Root',
-      'Parent',
-      'Children',
-    ]);
+    expect(pList.map((p) => p.textContent)).toEqual(['Root', 'Parent', 'Children']);
   });
 
   describe('getContainer', () => {
@@ -54,7 +50,7 @@ describe('Portal', () => {
             Bamboo
           </Portal>
           Light
-        </>,
+        </>
       );
 
       expect(container).toMatchSnapshot();
@@ -139,7 +135,7 @@ describe('Portal', () => {
       render(
         <Portal open autoLock getContainer={() => div}>
           Bamboo
-        </Portal>,
+        </Portal>
       );
 
       expect(document.body).not.toHaveStyle({
@@ -151,7 +147,7 @@ describe('Portal', () => {
       render(
         <Portal open autoLock getContainer={() => document.body}>
           Bamboo
-        </Portal>,
+        </Portal>
       );
 
       expect(document.body).toHaveStyle({
@@ -187,7 +183,7 @@ describe('Portal', () => {
       render(
         <Portal ref={portalRef} open>
           <p ref={elementRef}>Bamboo</p>
-        </Portal>,
+        </Portal>
       );
 
       expect(elementRef.current).toBe(document.querySelector('p'));
@@ -203,7 +199,7 @@ describe('Portal', () => {
           <>
             <p ref={elementRef}>Bamboo</p>
           </>
-        </Portal>,
+        </Portal>
       );
 
       expect(elementRef.current).toBe(document.querySelector('p'));
@@ -219,7 +215,7 @@ describe('Portal', () => {
       render(
         <Portal ref={portalRef} open>
           <P ref={elementRef}>Bamboo</P>
-        </Portal>,
+        </Portal>
       );
 
       expect(elementRef.current).toBeFalsy();

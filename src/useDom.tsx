@@ -1,8 +1,8 @@
+import canUseDom from 'rc-util-modern/dist/Dom/canUseDom';
+import useLayoutEffect from 'rc-util-modern/dist/hooks/useLayoutEffect';
 import * as React from 'react';
-import useLayoutEffect from 'rc-util/lib/hooks/useLayoutEffect';
-import canUseDom from 'rc-util/lib/Dom/canUseDom';
-import OrderContext from './Context';
 import type { QueueCreate } from './Context';
+import OrderContext from './Context';
 
 const EMPTY_LIST = [];
 
@@ -10,10 +10,7 @@ const EMPTY_LIST = [];
  * Will add `div` to document. Nest call will keep order
  * @param render Render DOM in document
  */
-export default function useDom(
-  render: boolean,
-  debug?: string,
-): [HTMLDivElement, QueueCreate] {
+export default function useDom(render: boolean, debug?: string): [HTMLDivElement, QueueCreate] {
   const [ele] = React.useState(() => {
     if (!canUseDom()) {
       return null;
@@ -39,7 +36,7 @@ export default function useDom(
     (appendedRef.current
       ? undefined
       : (appendFn: VoidFunction) => {
-          setQueue(origin => {
+          setQueue((origin) => {
             const newQueue = [appendFn, ...origin];
             return newQueue;
           });
@@ -76,7 +73,7 @@ export default function useDom(
 
   useLayoutEffect(() => {
     if (queue.length) {
-      queue.forEach(appendFn => appendFn());
+      queue.forEach((appendFn) => appendFn());
       setQueue(EMPTY_LIST);
     }
   }, [queue]);
